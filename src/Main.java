@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -9,12 +8,12 @@ public class Main {
         Scanner sc=new Scanner(System.in);
         System.out.println("Input:");
         String expression = sc.nextLine();
-        String result = calc(expression);
         System.out.println("Output:");
+        String result = calc(expression);
         System.out.println(result);
 }
     public static String calc(String s) throws ScannerException {
-        int res = 0;
+        String res = "";
 
         String c = s.replaceAll(" ","");
 
@@ -24,32 +23,48 @@ public class Main {
 
         for(int i=0; i<signs.length; i++){
             if(c.contains(signs[i])){
-                sign=signs[i];
+                sign = signs[i];
                 signCount++;
             }
         }
 
         if(sign == "") {
+            try{
+                throw new ScannerException();
+            }catch (ScannerException e){
+                return "throws Exception //т.к. строка не является математической операцией";
+            }
+        }
+        if(signCount > 1) {
+            try{
+                throw new ScannerException();
+            }catch (ScannerException e){
+                return "throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)";
+            }
+        }
+
+
+        /*if(sign == "") {
             throw new ScannerException("throws Exception //т.к. строка не является математической операцией");
         }
         if(signCount > 1){
             throw new ScannerException("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
-        }
+        }*/
 
 
         Pattern pattern = Pattern.compile("^([1][0]|[1-9])([+,-]|[/,*])([1][0]|[1-9])$");
         Matcher matcher = pattern.matcher(c);
 
         if(!matcher.matches()) {
-            throw new ScannerException("throws Exception");
+            try{
+                throw new ScannerException();
+            }catch (ScannerException e){
+                return "throws Exception";
+            }
         }
 
-        /*if(!matcher.matches()) {
-            try {
-                throw new ScannerException("des-error");
-            } catch (ScannerException e) {
-                System.err.println("throws Exception");
-            }
+       /* if(!matcher.matches()) {
+            throw new ScannerException("throws Exception");
         }*/
 
         StringTokenizer st = new StringTokenizer(c, "*/+-");
@@ -59,41 +74,9 @@ public class Main {
         String bStr = st.nextToken();
         int b = Integer.parseInt(bStr);
 
-        res = calculate(a,sign,b);
+        res = "" + calculate(a,sign,b);
 
-       /* String[] signs = {"+","-","/","*"};
-        for(int i=0; i<signs.length; i++){
-            if(c.contains(signs[i])){
-                String sign=signs[i];
-                res = calculate(a,sign,b);
-            }
-        }*/
-
-       /* if(a==10){
-            res = calculate(a,""+c.charAt(2),b);
-        }else {
-            res =calculate(a,""+c.charAt(1),b);
-        }*/
-
-
-      /*  if(c.contains("+")){
-                System.out.println("+");
-                res =calc(a,"+",b);
-        } else if(c.contains("-")){
-            System.out.println("-");
-            res =calc(a,"-/",b);
-        }
-        if(c.contains("*")){
-            System.out.println("*");
-            res =calc(a,"*",b);
-        }
-        if(c.contains("/")){
-            System.out.println("/");
-            res =calc(a,"/",b);
-        }
-*/
-
-        return ""+res;
+        return res;
 
     }
 
